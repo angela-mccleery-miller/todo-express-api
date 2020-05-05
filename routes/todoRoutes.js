@@ -4,7 +4,7 @@ const router = express.Router()
 const TodoModel = require("../models/todoModel")
 
 
-router.get("/todos", (req, res) => {
+router.get("/", (req, res) => {
     return res.status(200).send("<h1>Todo Routes</h1>");
 })
 // GET
@@ -55,10 +55,29 @@ router.post("/todo", (req, res) => {
     })
 })
 // PUT / PATCH
+router.patch("/todo/:id", (req, res) => {
+    TodoModel.findById(req.params.id, (err, result) => {
+
+        if (err) {
+            res.status(404).json({ error: true, message: "Could not PATCH todo "});
+        } else{
+            result.done = req.body.done;
+
+            result.save()
+            .then((todo) => {
+                return res.status(200).json({ message: "Updated!", todo });
+
+            })
+            .catch(err => {
+                return res.status(400).json({ error: true, message: `${err}`});
+               });
+        }
+    });
+})
 
 // DELETE
 router.delete("/todo/:id", (req, res) => {
-    TodoModel.findByIdAndRemove(req.params.id), 
+    TodoModel.findByIdAndRemove(req.params.id, 
     (err, todo) => {
         if(err) {
             res
@@ -77,7 +96,7 @@ router.delete("/todo/:id", (req, res) => {
                 id: todo._id })
             }
         }
-        
+    )        
 });
 
 

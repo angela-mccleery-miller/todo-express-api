@@ -4,13 +4,14 @@ const mongoose = require("mongoose")
 const bodyParser = require("body-parser")
 const cors = require("cors")
 
-const port = process.env.PORT || 4000;
-const app = express();
-
 const todoRoutes = require("./routes/todoRoutes")
 
+const port = process.env.PORT || 5000;
+const app = express();
+
 mongoose.connect(
-    "mongodb://localhost:27017/todo-db", 
+    process.env.MONGODB_URI,
+    // "mongodb://localhost:27017/todo-db", 
     { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false },
     (err) => {
         if(err) {
